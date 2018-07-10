@@ -377,7 +377,9 @@ Koin.logger = object : Logger {
 }
 ```
 
---
+---
+
+# Logging
 
 Default is `PrintLogger` implementation - it uses `println()`.
 
