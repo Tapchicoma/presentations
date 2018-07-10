@@ -11,12 +11,24 @@ name: agenda
 
 # What is Dependency injection
 
-**Main principle** - object delegates creation of dependencies to some _external object_,
-so they can be provided via:
+**Main principle** - object delegates creation of dependencies to some _external object_.
+
+--
+
+They can be provided via:
 
 - _constructor parameters_
+
+--
+
 - _external object instance (service locator)_
+
+--
+
 - _setters_
+
+--
+
 - _interface injection_
 
 ???
