@@ -424,17 +424,42 @@ and `ComponentCallbacks` interface
 
 ---
 
-# Pro/cons versus Dagger 2
+# Pros/cons versus Dagger 2
 
 **Pros**:
+
+--
+
 - Easier to understand
+
+--
+
 - Easier to find where class dependency comes from
+
+--
+
 - Doesn't require annotation processing
+
+--
+
 - Logging sometimes is useful
 
+---
+
+# Pros/cons versus Dagger 2
+
 **Cons**:
+
+--
+
 - Creates graph of dependencies in runtime
+
+--
+
 - Graph verification only via dry run
+
+--
+
 - Somewhat coupled with a code
 
 ---
