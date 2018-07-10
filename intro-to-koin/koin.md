@@ -198,9 +198,11 @@ startKoin(listOf(..), `extraProperties = mapOf("one" to 12345)`)
 startKoin(listOf(..), `useEnvironmentProperties = true`)
 ```
 
---
+---
 
-Property can be accessed:
+# Properties
+
+Property can be accessed using:
 - `getProperty(<Key>)`
 - `by property(<Key>)`
 
