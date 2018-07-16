@@ -50,13 +50,8 @@ class AugustinerBrewery : Brewery {
     fun brewBeer(): Beer { ... }
 }
 
-class BeerLover (
-    private val brewery: Brewery
-) {
-    fun drinkBeer() = {
-        val beer = brewery.brewBeer()
-        beer.drink()
-    }
+class BeerLover (private val brewery: Brewery) {
+    fun drinkBeer() = brewery.brewBeer().drink()
 }
 ```
 
