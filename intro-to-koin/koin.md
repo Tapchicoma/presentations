@@ -128,7 +128,9 @@ fun main(vararg args: String) {
   - by type: `get<SomeType>()`
   - by name: `get("some_name")`
 
---
+---
+
+# Dependency resolution
 
 - `by inject()` - kotlin delegate that resolves dependency on first class property access:
 
