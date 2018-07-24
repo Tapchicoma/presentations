@@ -11,35 +11,6 @@ name: agenda
 
 # What is Dependency injection
 
-**Main principle** - object delegates creation of dependencies to some _external object_.
-
---
-
-They can be provided via:
-
-- _constructor parameters_
-
---
-
-- _external object instance (service locator)_
-
---
-
-- _setters_
-
---
-
-- _interface injection_
-
-???
-
-setters - spring
-interface injection - Avalon?
-
----
-
-# Simple Koin setup
-
 Base class structure:
 ``` kotlin
 interface Brewery {
@@ -54,6 +25,97 @@ class BeerLover (private val brewery: Brewery) {
     fun drinkBeer() = brewery.brewBeer().drink()
 }
 ```
+
+---
+
+# What is Dependency injection
+
+**Main principle** - object delegates creation of dependencies to some _external object_.
+
+---
+
+# What is Dependency injection
+
+They can be provided via:
+
+- _constructor parameters_:
+
+``` kotlin
+val beerLover = BeerLover(AugustinerBrewery())
+```
+
+---
+
+# What is Dependency injection
+
+They can be provided via:
+
+- _external object instance (service locator)_:
+
+``` kotlin
+class BeerLover(private val serivceLocator: ServiceLocator) {
+    val brewery = serivceLocator.getBrewery()
+}
+```
+
+---
+
+# What is Dependency injection
+
+They can be provided via:
+
+- _setters_:
+
+``` kotlin
+class BeerLover {
+    private var brewery: Brewery? = null
+
+    fun setBrewery(brewery: Brewery) {
+        this.brewery = brewery
+    }
+}
+```
+
+???
+
+Spring framework
+
+---
+
+# What is Dependency injection
+
+They can be provided via:
+- _interface injection_:
+
+``` kotlin
+interface BrewerySetter {
+    fun setBrewery(brewery: Brewery)
+}
+
+class BeerLover : BrewerySetter {
+    private var brewery: Brewery? = null
+
+    override fun setBrewery(brewery: Brewery) {
+        this.brewery = brewery
+    }
+}
+```
+
+???
+
+interface injection - Avalon?
+
+---
+
+# What is Dependency injection
+
+**Main principle** - object delegates creation of dependencies to some _external object_.
+
+They can be provided via:
+- _constructor parameters_
+- _external object instance (service locator)_
+- _setters_
+- _interface injection_
 
 ---
 
