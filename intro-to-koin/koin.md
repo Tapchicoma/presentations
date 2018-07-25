@@ -124,6 +124,7 @@ They can be provided via:
 Add Koin dependency:
 
 ``` gradle
+ext.koin_version = "1.0.0-beta-3"
 implementation "org.koin:koin-core:$koin_version"
 ```
 
