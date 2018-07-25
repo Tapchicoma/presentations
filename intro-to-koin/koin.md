@@ -128,17 +128,21 @@ ext.koin_version = "1.0.0-beta-3"
 implementation "org.koin:koin-core:$koin_version"
 ```
 
---
+---
+
+# Simple Koin setup
 
 Define module:
 ``` kotlin
-val appModule: Module = applicationContext {
-    `bean` { AugustinerBrewery() as Brewery }
+val appModule: Module  = module {
+    `single` { AugustinerBrewery() as Brewery }
     `factory` { BeerLover(get()) }
 }
 ```
 
---
+---
+
+# Simple Koin setup
 
 Start Koin on app app entry point:
 ``` kotlin
