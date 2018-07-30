@@ -62,7 +62,7 @@ class SimpleApplicationComponent : Application, KoinComponent {
 }
 
 class SimpleApplicationInject : Application, KoinComponent {
-    private val beerLover by inject<BeerLover>()
+    private val beerLover by inject<BeerLover>(name = "soms")
 
     override fun run() {
         startKoin(listOf(simpleAppModule))

@@ -191,7 +191,7 @@ fun main(vararg args: String) {
 
 # Dependency resolution
 
-- `get()` - basic method to resolve dependency from dependency tree:
+`get()` - basic method to resolve dependency from dependency tree:
   - by type: `get<SomeType>()`
   - by name: `get("depency_name")`
 
@@ -199,7 +199,10 @@ fun main(vararg args: String) {
 
 # Dependency resolution
 
-- `by inject()` - kotlin delegate that resolves dependency on first class property access:
+`by inject()` - kotlin delegate that resolves dependency on first class property access:
+- by type: `by inject<SomeType>()`
+- by name: `by inject<SomeType>("dependency_name")`
+
 
 ``` kotlin
 class ApplicationWithInject : KoinComponent {
