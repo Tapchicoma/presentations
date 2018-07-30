@@ -193,7 +193,7 @@ fun main(vararg args: String) {
 
 - `get()` - basic method to resolve dependency from dependency tree:
   - by type: `get<SomeType>()`
-  - by name: `get("some_name")`
+  - by name: `get("depency_name")`
 
 ---
 
