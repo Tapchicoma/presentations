@@ -128,6 +128,11 @@ ext.koin_version = "1.0.0-beta-3"
 implementation "org.koin:koin-core:$koin_version"
 ```
 
+--
+
+More details what is changed since `0.9.8`: https://bit.ly/2OsKBXr
+or https://medium.com/koin-developers/opening-the-koin-1-0-0-beta-version-99cb8be1c308
+
 ---
 
 # Simple Koin setup
@@ -756,22 +761,8 @@ compile "org.koin:koin-ktor:$koin_version"
 
 ---
 
-# Next Koin 1.0.0 release
-
-- instead of `applicationContext` and `context` just `module`
-- `bean` renamed to `single`
-- added `createOnStart` flag
-- added `override` flag to be possible override definition from another module
-- improved parameters injection
-- adds java interop
-- optional reflection based injection
-- android lifecycle support for contexts
-- Spark and Ktor are using `koin-logger-slf4j` as default
-
-More details: https://medium.com/koin-developers/opening-the-koin-1-0-0-beta-version-99cb8be1c308
-
----
-
 class: center, middle
 
-# Thank you
+# Thank you!
+
+## Questions?
