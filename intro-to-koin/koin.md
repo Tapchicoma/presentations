@@ -584,27 +584,13 @@ class MyTest : KoinTest {
 
 # Logging
 
-Koin defines following interface for loggers:
+Koin defines following interface fqййqor loggers:
 
 ``` kotlin
 interface Logger {
-    fun log(msg : String)
     fun debug(msg : String)
+    fun log(msg : String)
     fun err(msg : String)
-}
-```
-
---
-
-Set your custom logger:
-
-``` kotlin
-Koin.logger = object : Logger {
-    override fun debug(msg: String) { .. }
-
-    override fun err(msg: String) { .. }
-
-    override fun log(msg: String) { .. }
 }
 ```
 
@@ -612,7 +598,47 @@ Koin.logger = object : Logger {
 
 # Logging
 
-Default is `PrintLogger` implementation - it uses `println()`.
+Use custom logger:
+
+``` kotlin
+val koinLogger = object : Logger {
+    override fun debug(msg: String) { .. }
+    override fun log(msg: String) { .. }
+    override fun err(msg: String) { .. }
+}
+startKoin(listOf(..), `logger = koinLogger`)
+
+```
+---
+
+# Logging
+
+Already existing `Logger` implementations:
+- `PrintLogger` - uses `println()` (default, in `koin-core`)
+- `EmptyLogger` - log nothing (in `koin-core`)
+- `SLF4JLogger` - uses `SLF4J` library (in `koin-logger-slf4j`)
+- `AndroidLogger` - uses `android.util.Log` (in `koin-android`)
+
+---
+
+# Logging
+
+Example:
+
+
+``` irc-log
+(KOIN)::[inf] [Logger] display debug = false
+(KOIN)::[inf] [context] create
+(KOIN)::[inf] [module] declare Single [class='koin.Brewery']
+(KOIN)::[inf] [module] declare Factory [class='koin.BeerLover']
+(KOIN)::[inf] [modules] loaded 2 definitions
+(KOIN)::[inf] [properties] load koin.properties
+(KOIN)::[inf] +-- 'koin.BeerLover'
+(KOIN)::[inf] | +-- 'koin.Brewery'
+(KOIN)::[inf] | \-- (*)
+(KOIN)::[inf] \-- (*)
+(KOIN)::[inf] [Close] Closing Koin context
+```
 
 ---
 
