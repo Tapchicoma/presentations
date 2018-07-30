@@ -7,6 +7,8 @@ name: agenda
 
 ### https://insert-koin.io/
 
+.footnote[By _Yahor Berdnikau_: Android developer **@Freeletics**]
+
 ---
 
 # What is Dependency injection
@@ -223,7 +225,7 @@ class ApplicationWithInject : KoinComponent {
 
 # Multiple definitions
 
-For the same type definitions, Koin is always selects the last one.
+For the same type definitions, Koin will throw `DependencyResolutionException`.
 
 --
 
