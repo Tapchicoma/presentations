@@ -6,6 +6,7 @@ import org.koin.standalone.KoinComponent
 import org.koin.standalone.StandAloneContext.closeKoin
 import org.koin.standalone.StandAloneContext.startKoin
 import org.koin.standalone.get
+import org.koin.standalone.inject
 
 class Beer {
     fun drink() = println("gulp gulp gulp")
@@ -60,8 +61,17 @@ class SimpleApplicationComponent : Application, KoinComponent {
     }
 }
 
+class SimpleApplicationInject : Application, KoinComponent {
+    private val beerLover by inject<BeerLover>()
+
+    override fun run() {
+        startKoin(listOf(simpleAppModule))
+        beerLover.drink()
+        closeKoin()
+    }
+}
 
 fun main(vararg args: String) {
-    val application = SimpleApplication()
+    val application = SimpleApplicationInject()
     application.run()
 }
