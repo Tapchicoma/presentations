@@ -218,16 +218,16 @@ class ApplicationWithInject : KoinComponent {
 
 # Multiple definitions
 
-- For the same type definitions, Koin is always selects the last one.
+For the same type definitions, Koin is always selects the last one.
 
 --
 
-- To solve it - use named definitions:
+To solve it - use named definitions:
 
 ``` kotlin
-val appModule = applicationContext {
-    `bean("best_brewery")` { AugustinerBrewery() as Brewery }
-    `bean("okay_brewery")` { StanbergerBrewery() as Brewery }
+val namedModule = module {
+    `single("best_brewery")` { AugustinerBrewery() as Brewery }
+    `single("okay_brewery")` { PaulanerBrewery() as Brewery }
 }
 
 class NamedApplication : KoinComponent {

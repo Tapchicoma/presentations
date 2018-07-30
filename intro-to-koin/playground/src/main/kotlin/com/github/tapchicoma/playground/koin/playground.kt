@@ -71,7 +71,25 @@ class SimpleApplicationInject : Application, KoinComponent {
     }
 }
 
+class PaulanerBrewery : Brewery {
+    override fun brewBeer(): Beer = Beer()
+}
+
+val namedModule = module {
+    single("best_brewery") { AugustinerBrewery() as Brewery }
+    single("okay_brewery") { PaulanerBrewery() as Brewery }
+}
+
+class NamedApplication : KoinComponent {
+    fun run() {
+        startKoin(listOf(namedModule))
+        val brewery = get<Brewery>("best_brewery")
+        println(brewery.toString())
+        closeKoin()
+    }
+}
+
 fun main(vararg args: String) {
-    val application = SimpleApplicationInject()
+    val application = NamedApplication()
     application.run()
 }
