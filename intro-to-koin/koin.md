@@ -644,40 +644,71 @@ Example:
 
 # Koin packages
 
+Core:
+
 ``` gradle
-koin_version = '0.9.3' // Latest stable version
-
 // Koin for Kotlin
-implementation "org.koin:koin-core:$koin_version"
-
-// Koin for Android
-implementation "org.koin:koin-android:$koin_version"
-
-// Koin for Android Architecture Components
-implementation "org.koin:koin-android-architecture:$koin_version"
-
-// Koin for Spark Kotlin
-implementation "org.koin:koin-spark:$koin_version"
-
-// Koin for Ktor Kotlin
-implementation "org.koin:koin-ktor:$koin_version"
-
-// Koin for JUnit tests
-testImplementation "org.koin:koin-test:$koin_version"
+compile "org.koin:koin-core:$koin_version"
+// Koin for Unit tests
+testCompile "org.koin:koin-test:$koin_version"
+// Koin for Java developers
+compile "org.koin:koin-java:$koin_version"
+// Advanced features
+compile "org.koin:koin-reflect:$koin_version"
 ```
 
 ???
-`koin-android` - adds android logger and extentions to `Application` class
-and `ComponentCallbacks` interface
 
-`koin-android-architecture` - add extentions helper functions to provide
-`ViewModel` using Koin and special version of `ViewModelProvider.Factory`
+`reflect` adds `build()` method that can instantiate object via reflection
+`java` add java friendly functions to use Koin
 
-`koin-ktor` - adds helper methods to create koin graph on ktor `Application`
+---
 
-`koin-spark` - add helper methods to spark
+# Koin packages
 
-`koin-test` - exposes internals, add junit assertions, dry run
+Android:
+
+``` gradle
+// Koin for Android
+compile "org.koin:koin-android:$koin_version"
+// Koin Android Scope feature
+compile "org.koin:koin-android-scope:$koin_version"
+// Koin Android ViewModel feature
+compile "org.koin:koin-android-viewmodel:$koin_version"
+
+// AndroidX (based on koin-android)
+// Koin AndroidX Scope feature
+compile "org.koin:koin-androidx-scope:$koin_version"
+// Koin AndroidX ViewModel feature
+compile "org.koin:koin-androidx-viewmodel:$koin_version"
+```
+
+???
+
+`scope` - adds useful methods to scope to certain module namespace injections
+and release it's definitions
+
+---
+
+# Koin packages
+
+Spark:
+
+``` gradle
+// Koin for Spark Kotlin
+compile "org.koin:koin-spark:$koin_version"
+```
+
+---
+
+# Koin packages
+
+Ktor:
+
+``` gradle
+// Koin for Ktor Kotlin
+compile "org.koin:koin-ktor:$koin_version"
+```
 
 ---
 
