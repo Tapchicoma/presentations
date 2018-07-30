@@ -366,61 +366,154 @@ class ParamsApplication : Application, KoinComponent {
 
 ---
 
-# Context
+# Modules
 
-A `context` is a logical subset of bean definitions inside a module:
+Main goal of modules:
+- **to scope** definitions in namespace
+- an ability **to drop** created definitions instances inside namespace
 
+---
+
+# Modules
+
+Module namespace is "similar" to java packages:
+
+--
 
 ``` kotlin
-val moduleWithContext = applicationContext {
-    bean { AugustinerBrewery() as Brewery }
+// Namespace = "."
+val rootNamespace = module { }
 
-*   context("Oktoberfest") {
+```
+
+--
+
+```kotlin
+// Namespace = ".sample"
+val sampleNamespace = module("sample") {  }
+```
+
+--
+
+``` kotlin
+// Namespace = ".Brewery"
+val classNamespace = module(Brewery::class.moduleName) {  }
+```
+
+---
+
+# Inner modules
+
+Module can also contain _inner_ modules, that will have _parent_ namespace:
+
+``` kotlin
+val innerModule = module {
+    single { AugustinerBrewery() as Brewery }
+*   module("month") {
+*       module("october") {
+            factory { OktoberfestBeerLover(get()) }
+        }
+    }
+}
+```
+
+---
+
+# Inner modules
+
+Module can also contain _inner_ modules, that will have _parent_ namespace:
+
+``` kotlin
+val innerModule = module {
+    single { AugustinerBrewery() as Brewery }
+*   module("month.october") {
+        factory { OktoberfestBeerLover(get()) }
+    }
+}
+```
+
+---
+
+# Definitions visibility in modules
+
+Module namespace isolation:
+
+``` kotlin
+val moduleVisibility = `module` {
+    single("amount") { 750 }
+*   module("craftbiermuc") {
+        single { BrewDogBrewery(get("amount")) as Brewery }
         factory { BeerLover(get()) }
     }
-}
-```
-
----
-
-# Context
-
-Main goal of context is an ability to drop it's definitions instances:
-
-
-``` kotlin
-class ApplicationWithContext : KoinComponent {
-    fun run() {
-        val beerLover = get<BeerLover>()
-*       releaseContext("Oktoberfest")
-        val newBeerLover = get<BeerLover>()
-
-        beerLover `should not be` newBeerLover
+*   module("oktoberfest") {
+        single { AugustinerBrewery() as Brewery }
+*       module("tourist") {
+            factory { BeerLover(get()) }
+        }
     }
 }
 ```
 
----
+???
 
-# Context
-
-Context isolation:
-
-``` kotlin
-val moduleWithNestedContexts = applicationContext {
-    context("A") {
-        context("B") {}
-    }
-
-    context("C") {}
-}
-```
-
-* definitions from **B** can see definitions from **A** and **Application context**
-* definitions from **A** can see definitions from **Application context**
-* definitions from **C** can see definitions from **Application context**
+* definitions from **tourist** can get definitions from **oktoberfest** and **root**
+* definitions from **oktoberfest** can get definitions from **root**
+* definitions from **craftbiermuc** can get definitions from **root**
 
 All other visibilities are **blocked**.
+
+---
+
+# Definitions visibility in modules
+
+**Child namespaces can see their parents, but not the inverse!**
+
+---
+
+# Using modules
+
+``` kotlin
+val sampleNamespace = module("sample") {
+    single { AugustinerBrewery() as Brewery }
+}
+val classNamespace = module(Brewery::class.moduleName) {
+    single { BrewDogBrewery() as Brewery }
+}
+
+class Application : KoinComponent {
+    fun run() {
+        startKoin(listOf(sampleNamespace, classNamespace))
+        val brewery = get<Brewery>(`module = "sample"`)
+    }
+}
+```
+
+---
+
+# Releasing definitions
+
+Releasing defintions helps to manage instances lifecycle and save memory.
+
+--
+
+``` kotlin
+val sampleNamespace = module("sample") {..}
+
+class ReleaseInstancesApplication : Application, KoinComponent {
+    override fun run() {
+        val brewery = get<Brewery>()
+        release("sample")
+        val newBrewery = get<Brewery>()
+        assert(brewery !== newBrewery)
+    }
+}
+```
+
+---
+
+# Releasing definitions
+
+_On releasing instances in parent namespace, all child namespaces instances are also released!_
 
 ---
 

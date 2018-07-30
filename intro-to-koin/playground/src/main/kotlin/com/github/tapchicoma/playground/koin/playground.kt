@@ -3,12 +3,14 @@ package com.github.tapchicoma.playground.koin
 import org.koin.core.Koin
 import org.koin.core.parameter.parametersOf
 import org.koin.dsl.module.module
+import org.koin.dsl.path.moduleName
 import org.koin.standalone.KoinComponent
 import org.koin.standalone.StandAloneContext.closeKoin
 import org.koin.standalone.StandAloneContext.startKoin
 import org.koin.standalone.get
 import org.koin.standalone.inject
 import org.koin.standalone.property
+import org.koin.standalone.release
 
 open class Beer {
     open fun drink() = println("gulp gulp gulp")
@@ -131,7 +133,65 @@ class ParamsApplication : Application, KoinComponent {
     }
 }
 
+val rootNamespace = module {}
+val sampleNamespace = module("sample") {
+    single { AugustinerBrewery() as Brewery }
+}
+val classNamespace = module(Brewery::class.moduleName) {
+    single { BrewDogBrewery() as Brewery }
+}
+
+class NamespaceApplication : Application, KoinComponent {
+    override fun run() {
+        startKoin(listOf(rootNamespace, sampleNamespace, classNamespace))
+        val brewery: Brewery = get(module = "sample")
+        println(brewery.brewBeer())
+        closeKoin()
+    }
+}
+
+val innerModule = module {
+    single { AugustinerBrewery() as Brewery }
+    module("sample") {
+        factory { BeerLover(get()) }
+    }
+}
+
+val moduleVisibility = module {
+    single("amount") { 750 }
+    module("craftbiermuc") {
+        single { BrewDogBrewery(get("amount")) as Brewery }
+        factory { BeerLover(get()) }
+    }
+    module("oktoberfest") {
+        single { AugustinerBrewery() as Brewery }
+        module("tourist") {
+            factory { BeerLover(get()) }
+        }
+    }
+}
+
+class VisibilityApplication : Application, KoinComponent {
+    override fun run() {
+        startKoin(listOf(moduleVisibility))
+        val beerLover = get<BeerLover>(module = "craftbiermuc")
+        beerLover.drink()
+        closeKoin()
+    }
+}
+
+class ReleaseInstancesApplication : Application, KoinComponent {
+    override fun run() {
+        startKoin(listOf(sampleNamespace))
+        val brewery = get<Brewery>()
+        release("sample")
+        val newBrewery = get<Brewery>()
+        assert(brewery !== newBrewery)
+        closeKoin()
+    }
+}
+
 fun main(vararg args: String) {
-    val application = ParamsApplication()
+    val application = ReleaseInstancesApplication()
     application.run()
 }
