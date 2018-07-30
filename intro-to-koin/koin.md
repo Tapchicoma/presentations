@@ -315,32 +315,51 @@ class ParametersApplication : Application, KoinComponent {
 
 ---
 
-# Parameters
+# Injection parameters
 
 Allows to dynamically provide class paramter when requesting definition:
 
 --
 
 ``` kotlin
-class CraftBrewery(
-    private val beerAmount: Int
-) : Brewery {
-    override fun brewBeer(): Beer = Beer(beerAmount)
-}
-
-val BEER_AMOUNT_PARAM = "beer_amount"
-
-val moduleWithParams = applicationContext {
-    factory { `params -> CraftBrewery(params[BEER_AMOUNT]) as Brewery` }
+val paramsModule = module {
+    factory { `(beerAmount: Int)` ->
+        BrewDogBrewery(beerAmount) as Brewery
+    }
 }
 ```
 
---
+---
+
+# Injection parameters
+
+Allows to dynamically provide class paramter when requesting definition:
 
 ``` kotlin
-class ApplicationWithParams : KoinComponent {
-    fun run() {
-*       val brewery: Brewery = get { mapOf(BOTTLE_AMOUNT to 350) }
+class ParamsApplication : Application, KoinComponent {
+    override fun run() {
+        startKoin(listOf(paramsModule))
+        val brewery = `get<Brewery> { parametersOf(750) }`
+        println(brewery.brewBeer())
+        closeKoin()
+    }
+}
+```
+
+---
+
+# Injection parameters
+
+Allows to dynamically provide class paramter when requesting definition:
+
+
+``` kotlin
+class ParamsApplication : Application, KoinComponent {
+    private val brewery: Brewery `by inject { parametersOf(750) }`
+    override fun run() {
+        startKoin(listOf(paramsModule))
+        println(brewery.brewBeer())
+        closeKoin()
     }
 }
 ```

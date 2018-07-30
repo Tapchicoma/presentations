@@ -1,6 +1,7 @@
 package com.github.tapchicoma.playground.koin
 
 import org.koin.core.Koin
+import org.koin.core.parameter.parametersOf
 import org.koin.dsl.module.module
 import org.koin.standalone.KoinComponent
 import org.koin.standalone.StandAloneContext.closeKoin
@@ -117,7 +118,20 @@ class PropertiesApplication : Application, KoinComponent {
     }
 }
 
+val paramsModule = module {
+    factory { (beerAmount: Int) ->  BrewDogBrewery(beerAmount) as Brewery }
+}
+
+class ParamsApplication : Application, KoinComponent {
+    override fun run() {
+        startKoin(listOf(paramsModule))
+        val brewery = get<Brewery> { parametersOf(750) }
+        println(brewery.brewBeer())
+        closeKoin()
+    }
+}
+
 fun main(vararg args: String) {
-    val application = PropertiesApplication()
+    val application = ParamsApplication()
     application.run()
 }
