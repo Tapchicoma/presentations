@@ -519,46 +519,62 @@ _On releasing instances in parent namespace, all child namespaces instances are 
 
 # Testing
 
-* Include test dependency:
+Include test dependency:
 
 ``` gradle
+ext.koin_version = "1.0.0-beta-3"
 testImplementation "org.koin:koin-test:$koin_version"
 ```
 
+---
+
+# Testing
+
+Test class shoud:
+- extend `KoinTest`
+
 --
 
-* Test class shoud extend `KoinTest`
-
---
-
-* Add:
+- have following:
 
 ``` kotlin
-@Before
-fun before(){
+@Before fun before() {
     startKoin(listOf(myModule))
 }
 
-@After
-fun after(){
+@After fun after() {
     closeKoin()
 }
 
 ```
 
-Use `by inject()` in test fields to get required depedencies.
+---
+
+# Testing
+
+Koin test adds following:
+* Use `by inject()` or `get()` in test fields to get required depedencies.
+* Use `declareMock<Type>()` in test to replace actual instance with Mockito _mock_.
+* Use `declare { factory {..}}` to provide stubs implementations.
 
 ---
 
-# Koin dry run
+# Testing: check
 
-Allows to verify injections graph using Unit test:
+`check(listOf(..))` - walks through provided modules list definitions graph
+and checks that each definition is bound.
+
+---
+
+# Testing: dry run
+
+`dryRun()` - allows to verify app injections graph
 
 ``` kotlin
 class MyTest : KoinTest {
     @Test
     fun dryRun() {
-        startKoin(/* list of app modules */)
+        startKoin(listOf(/* list of app modules */))`
 *       dryRun()
     }
 }

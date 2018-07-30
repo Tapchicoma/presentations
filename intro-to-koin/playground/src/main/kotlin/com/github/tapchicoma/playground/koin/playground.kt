@@ -1,5 +1,8 @@
 package com.github.tapchicoma.playground.koin
 
+import org.junit.After
+import org.junit.Before
+import org.junit.Test
 import org.koin.core.Koin
 import org.koin.core.parameter.parametersOf
 import org.koin.dsl.module.module
@@ -11,6 +14,11 @@ import org.koin.standalone.get
 import org.koin.standalone.inject
 import org.koin.standalone.property
 import org.koin.standalone.release
+import org.koin.test.KoinTest
+import org.koin.test.check
+import org.koin.test.declare
+import org.koin.test.declareMock
+import org.koin.test.dryRun
 
 open class Beer {
     open fun drink() = println("gulp gulp gulp")
@@ -194,4 +202,39 @@ class ReleaseInstancesApplication : Application, KoinComponent {
 fun main(vararg args: String) {
     val application = ReleaseInstancesApplication()
     application.run()
+}
+
+/** Testing **/
+
+class TestExample : KoinTest {
+    @Before
+    fun before() {
+        startKoin(listOf(simpleAppModule))
+        declareMock<Brewery>()
+        declare { object : Brewery {
+            override fun brewBeer(): Beer = Beer()
+        }}
+    }
+
+    @Test
+    fun someTest() {}
+
+    @After
+    fun after() {
+        closeKoin()
+    }
+}
+
+val checkFailModule = module { factory { BeerLover(get()) } }
+class CheckTestExample : KoinTest {
+    @Test fun checkGraph() {
+        check(listOf(checkFailModule)) // Fail to find Brewery
+    }
+}
+
+class DryRunExample : KoinTest {
+    @Test fun testDryRun() {
+        startKoin(listOf(simpleAppModule))
+        dryRun()
+    }
 }
