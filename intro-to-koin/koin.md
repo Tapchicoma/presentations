@@ -768,3 +768,25 @@ class: center, middle
 # Thank you!
 
 ## Questions?
+
+---
+
+# Links
+
+Presentation:
+https://tapchicoma.github.io/presentations/intro-to-koin/
+
+Playground:
+https://github.com/Tapchicoma/presentations/tree/master/intro-to-koin/playground
+
+.left-column[.center[
+![presentation-link](presentation-qrcode.jpeg)
+
+Presentation
+]]
+
+.right-column[.center[
+![playground-link](playground-qrcode.jpeg)
+
+Playground
+]]
