@@ -242,24 +242,21 @@ class NamedApplication : KoinComponent {
 
 # Properties
 
-Properties is a static values loaded on koin start:
-- from `koin.properties` file (in `src/main/resources`, `src/test/resources`, `assets/koin.properties`):
+Properties is a "static" values loaded on koin start:
+- from `koin.properties` file (in `src/main/resources`, `src/test/resources`, `assets/koin.properties`)
 
 ``` kotlin
 startKoin(listOf(..), `useKoinPropertiesFile = true`)
 ```
 
---
 
-- via parameter in `startKoin()` method:
+---
 
-``` kotlin
-startKoin(listOf(..), `extraProperties = mapOf("one" to 12345)`)
-```
+# Properties
 
---
-
-- from environment properties:
+Properties is a "static" values loaded on koin start:
+- from `koin.properties` file (in `src/main/resources`, `src/test/resources`, `assets/koin.properties`)
+- from environment properties
 
 ``` kotlin
 startKoin(listOf(..), `useEnvironmentProperties = true`)
@@ -267,15 +264,54 @@ startKoin(listOf(..), `useEnvironmentProperties = true`)
 
 ---
 
+
+# Properties
+
+Properties is a "static" values loaded on koin start:
+- from `koin.properties` file (in `src/main/resources`, `src/test/resources`, `assets/koin.properties`)
+- from environment properties
+- via parameter in `startKoin()` method
+
+``` kotlin
+startKoin(listOf(..), `extraProperties = mapOf("one" to 12345)`)
+```
+
+---
+
 # Properties
 
 Property can be accessed using:
-- `getProperty(<Key>)`
-- `by property(<Key>)`
+- `getProperty("property_key")`
+- `by property("property_key")`
 
 --
 
-Property can be added by calling `setProperty("ZZZ", 123213)` in `KoinComponent` or on `context` object.
+Property can be added by calling on `KoinComponent` or on `context` object:
+
+``` kotlin
+    setProperty("property_key", 42)
+```
+
+---
+
+# Properties usage example
+
+``` kotlin
+val parametersModule = module {
+*   single { BrewDogBrewery(getProperty("beer_amount")) }
+    factory { BeerLover(get()) }
+}
+
+class ParametersApplication : Application, KoinComponent {
+    override fun run() {
+        startKoin(
+            listOf(parametersModule),
+*           extraProperties = mapOf("beer_amount" to 750)
+        )
+        val beerLover = get<BeerLover>()
+        beerLover.drink()
+    ...
+```
 
 ---
 

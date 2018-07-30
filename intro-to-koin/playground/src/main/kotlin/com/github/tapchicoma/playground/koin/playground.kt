@@ -7,9 +7,16 @@ import org.koin.standalone.StandAloneContext.closeKoin
 import org.koin.standalone.StandAloneContext.startKoin
 import org.koin.standalone.get
 import org.koin.standalone.inject
+import org.koin.standalone.property
 
-class Beer {
-    fun drink() = println("gulp gulp gulp")
+open class Beer {
+    open fun drink() = println("gulp gulp gulp")
+}
+
+class CraftBeer(
+    private val amount: Int = 350
+) : Beer() {
+    override fun drink() = println("Gulp $amount of beer")
 }
 
 interface Brewery {
@@ -81,6 +88,7 @@ val namedModule = module {
 }
 
 class NamedApplication : KoinComponent {
+    private val test: Boolean by property("property_name")
     fun run() {
         startKoin(listOf(namedModule))
         val brewery = get<Brewery>("best_brewery")
@@ -89,7 +97,27 @@ class NamedApplication : KoinComponent {
     }
 }
 
+class BrewDogBrewery(
+    private val defaultAmountOfBeer: Int = 350
+) : Brewery {
+    override fun brewBeer(): Beer = CraftBeer(defaultAmountOfBeer)
+}
+
+val propertiesModule = module {
+    single { BrewDogBrewery(getProperty("beer_amount")) as Brewery }
+    factory { BeerLover(get()) }
+}
+
+class PropertiesApplication : Application, KoinComponent {
+    override fun run() {
+        startKoin(listOf(propertiesModule), extraProperties = mapOf("beer_amount" to 750))
+        val beerLover = get<BeerLover>()
+        beerLover.drink()
+        closeKoin()
+    }
+}
+
 fun main(vararg args: String) {
-    val application = NamedApplication()
+    val application = PropertiesApplication()
     application.run()
 }
