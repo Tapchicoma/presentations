@@ -726,11 +726,15 @@ compile "org.koin:koin-ktor:$koin_version"
 
 --
 
-- Doesn't require annotation processing
+- Doesn't require annotation processing (my favourite)
 
 --
 
 - Logging sometimes is useful
+
+--
+
+- Easier to use in gradle modules/libraries
 
 ---
 
@@ -744,7 +748,7 @@ compile "org.koin:koin-ktor:$koin_version"
 
 --
 
-- Graph verification only via dry run
+- Graph verification only via dry run (not on compile time)
 
 --
 
