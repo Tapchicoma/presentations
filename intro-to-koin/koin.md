@@ -32,7 +32,7 @@ class BeerLover (private val brewery: Brewery) {
 
 # What is Dependency injection
 
-**Main principle** - object delegates creation of dependencies to some _external object_.
+**Main principle** - object delegates creation of dependencies to some _external object_ (_inversion of control_).
 
 ---
 
@@ -786,11 +786,7 @@ compile "org.koin:koin-ktor:$koin_version"
 
 ---
 
-# Pros/cons versus Dagger 2
-
-**Pros**:
-
---
+# Pros versus Dagger 2
 
 - Easier to understand
 
@@ -810,13 +806,17 @@ compile "org.koin:koin-ktor:$koin_version"
 
 - Easier to use in gradle modules/libraries
 
----
+--
 
-# Pros/cons versus Dagger 2
-
-**Cons**:
+- Less boilerplate
 
 --
+
+- Feels more native in Kotlin
+
+---
+
+# Cons versus Dagger 2
 
 - Creates graph of dependencies in runtime
 
