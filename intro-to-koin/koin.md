@@ -158,6 +158,16 @@ fun main(vararg args: String) {
 }
 ```
 
+--
+
+Or in library:
+
+``` kotlin
+fun init() {
+*   loadKoinModules(appModule, anotherAppModule)
+}
+```
+
 ---
 
 # Simple Koin setup
@@ -191,6 +201,20 @@ fun main(vararg args: String) {
     startKoin(listOf(appModule))
     val application = Application()
     application.run()
+}
+```
+
+---
+
+# Simple Koin setup
+
+Drop all instances and definitions on app exit:
+
+``` kotlin
+fun main(vararg args: String) {
+    startKoin(listOf(..))
+    ...
+*   closeKoin()
 }
 ```
 
