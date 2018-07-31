@@ -223,13 +223,14 @@ class ApplicationWithInject : KoinComponent {
 
 ---
 
-# Multiple definitions
+# Same type definitions
 
-For the same type definitions, Koin will throw `DependencyResolutionException`.
+When module has multiple definitions for the same type and consumer tries to
+get this type - Koin will throw `DependencyResolutionException`. Solutions:
 
 --
 
-To solve it - use named definitions:
+- use named definitions:
 
 ``` kotlin
 val namedModule = module {
@@ -237,12 +238,78 @@ val namedModule = module {
     `single("okay_brewery")` { PaulanerBrewery() as Brewery }
 }
 
-class NamedApplication : KoinComponent {
-    fun run() {
-*       val brewery = get<Brewery>("best_brewery")
-    }
-}
+*val brewery = get<Brewery>("best_brewery")
+```
 
+---
+
+# Same type definitions
+
+When module has multiple definitions for the same type and consumer tries to
+get this type - Koin will throw `DependencyResolutionException`. Solutions:
+
+- use `override = true` on definition redeclaration:
+
+``` kotlin
+val multipleDefinitions = module {
+    single { PaulanerBrewery() as Brewery }
+    single(`override = true`) { AugustinerBrewery() as Brewery }
+}
+```
+
+---
+
+# Same type definitions
+
+When module has multiple definitions for the same type and consumer tries to
+get this type - Koin will throw `DependencyResolutionException`. Solutions:
+
+- use `override = true` on module redeclaration:
+
+``` kotlin
+val craftModule = module(`override = true`) {
+    single { BrewDogBrewery() as Brewery }
+}
+```
+
+---
+
+# Create on start
+
+By default all declarations are evaluated lazily, to create decalration instance
+on graph creation time:
+
+- add `createOnStart = true` to definition declaration:
+
+``` kotlin
+val appModule = module {
+    single(`createOnStart = true`) { AugustinerBrewery() }
+}
+```
+
+---
+
+# Create on start
+
+By default all declarations are evaluated lazily, to create decalration instance
+on graph creation time:
+
+- add `createOnStart = true` to module declaration:
+
+``` kotlin
+val appModule = module(`createOnStart = true`) {
+    single { AugustinerBrewery() as Brewery }
+}
+```
+
+---
+
+# Create on start
+
+To prevent creation of instance on Koin start:
+
+``` kotlin
+startKoin(listOf(/* modules */), `createOnStart = false`)
 ```
 
 ---
