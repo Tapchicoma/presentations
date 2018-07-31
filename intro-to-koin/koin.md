@@ -7,38 +7,11 @@ name: agenda
 
 ### https://insert-koin.io/
 
+.footnote[By _Yahor Berdnikau_: Android developer **@Freeletics**]
+
 ---
 
 # What is Dependency injection
-
-**Main principle** - object delegates creation of dependencies to some _external object_.
-
---
-
-They can be provided via:
-
-- _constructor parameters_
-
---
-
-- _external object instance (service locator)_
-
---
-
-- _setters_
-
---
-
-- _interface injection_
-
-???
-
-setters - spring
-interface injection - Avalon?
-
----
-
-# Simple Koin setup
 
 Base class structure:
 ``` kotlin
@@ -57,30 +30,141 @@ class BeerLover (private val brewery: Brewery) {
 
 ---
 
+# What is Dependency injection
+
+**Main principle** - object delegates creation of dependencies to some _external object_ (_inversion of control_).
+
+---
+
+# What is Dependency injection
+
+They can be provided via:
+
+- _constructor parameters_:
+
+``` kotlin
+val beerLover = BeerLover(AugustinerBrewery())
+```
+
+---
+
+# What is Dependency injection
+
+They can be provided via:
+
+- _external object instance (service locator)_:
+
+``` kotlin
+class BeerLover(private val serivceLocator: ServiceLocator) {
+    val brewery = serivceLocator.getBrewery()
+}
+```
+
+---
+
+# What is Dependency injection
+
+They can be provided via:
+
+- _setters_:
+
+``` kotlin
+class BeerLover {
+    private var brewery: Brewery? = null
+
+    fun setBrewery(brewery: Brewery) {
+        this.brewery = brewery
+    }
+}
+```
+
+???
+
+Spring framework
+
+---
+
+# What is Dependency injection
+
+They can be provided via:
+- _interface injection_:
+
+``` kotlin
+interface BrewerySetter {
+    fun setBrewery(brewery: Brewery)
+}
+
+class BeerLover : BrewerySetter {
+    private var brewery: Brewery? = null
+
+    override fun setBrewery(brewery: Brewery) {
+        this.brewery = brewery
+    }
+}
+```
+
+???
+
+interface injection - Avalon?
+
+---
+
+# What is Dependency injection
+
+**Main principle** - object delegates creation of dependencies to some _external object_.
+
+They can be provided via:
+- _constructor parameters_
+- _external object instance (service locator)_
+- _setters_
+- _interface injection_
+
+---
+
 # Simple Koin setup
 
 Add Koin dependency:
 
 ``` gradle
+ext.koin_version = "1.0.0-beta-3"
 implementation "org.koin:koin-core:$koin_version"
 ```
 
 --
 
+More details what is changed since `0.9.8`: https://bit.ly/2OsKBXr
+or https://medium.com/koin-developers/opening-the-koin-1-0-0-beta-version-99cb8be1c308
+
+---
+
+# Simple Koin setup
+
 Define module:
 ``` kotlin
-val appModule: Module = applicationContext {
-    `bean` { AugustinerBrewery() as Brewery }
+val appModule: Module  = module {
+    `single` { AugustinerBrewery() as Brewery }
     `factory` { BeerLover(get()) }
 }
 ```
 
---
+---
+
+# Simple Koin setup
 
 Start Koin on app app entry point:
 ``` kotlin
 fun main(vararg args: String) {
     val koin = `startKoin(listOf(appModule))`
+}
+```
+
+--
+
+Or in library:
+
+``` kotlin
+fun init() {
+*   loadKoinModules(appModule, anotherAppModule)
 }
 ```
 
@@ -122,17 +206,34 @@ fun main(vararg args: String) {
 
 ---
 
-# Dependency resolution
+# Simple Koin setup
 
-- `get()` - basic method to resolve dependency from dependency tree:
-  - by type: `get<SomeType>()`
-  - by name: `get("some_name")`
+Drop all instances and definitions on app exit:
+
+``` kotlin
+fun main(vararg args: String) {
+    startKoin(listOf(..))
+    ...
+*   closeKoin()
+}
+```
 
 ---
 
 # Dependency resolution
 
-- `by inject()` - kotlin delegate that resolves dependency on first class property access:
+`get()` - basic method to resolve dependency from dependency tree:
+  - by type: `get<SomeType>()`
+  - by name: `get("depency_name")`
+
+---
+
+# Dependency resolution
+
+`by inject()` - kotlin delegate that resolves dependency on first class property access:
+- by type: `by inject<SomeType>()`
+- by name: `by inject<SomeType>("dependency_name")`
+
 
 ``` kotlin
 class ApplicationWithInject : KoinComponent {
@@ -146,50 +247,114 @@ class ApplicationWithInject : KoinComponent {
 
 ---
 
-# Multiple definitions
+# Same type definitions
 
-- For the same type definitions, Koin is always selects the last one.
+When module has multiple definitions for the same type and consumer tries to
+get this type - Koin will throw `DependencyResolutionException`. Solutions:
 
 --
 
-- To solve it - use named definitions:
+- use named definitions:
 
 ``` kotlin
-val appModule = applicationContext {
-    `bean("best_brewery")` { AugustinerBrewery() as Brewery }
-    `bean("okay_brewery")` { StanbergerBrewery() as Brewery }
+val namedModule = module {
+    `single("best_brewery")` { AugustinerBrewery() as Brewery }
+    `single("okay_brewery")` { PaulanerBrewery() as Brewery }
 }
 
-class NamedApplication : KoinComponent {
-    fun run() {
-*       val brewery = get<Brewery>("best_brewery")
-    }
-}
+*val brewery = get<Brewery>("best_brewery")
+```
 
+---
+
+# Same type definitions
+
+When module has multiple definitions for the same type and consumer tries to
+get this type - Koin will throw `DependencyResolutionException`. Solutions:
+
+- use `override = true` on definition redeclaration:
+
+``` kotlin
+val multipleDefinitions = module {
+    single { PaulanerBrewery() as Brewery }
+    single(`override = true`) { AugustinerBrewery() as Brewery }
+}
+```
+
+---
+
+# Same type definitions
+
+When module has multiple definitions for the same type and consumer tries to
+get this type - Koin will throw `DependencyResolutionException`. Solutions:
+
+- use `override = true` on module redeclaration:
+
+``` kotlin
+val craftModule = module(`override = true`) {
+    single { BrewDogBrewery() as Brewery }
+}
+```
+
+---
+
+# Create on start
+
+By default all declarations are evaluated lazily, to create decalration instance
+on graph creation time:
+
+- add `createOnStart = true` to definition declaration:
+
+``` kotlin
+val appModule = module {
+    single(`createOnStart = true`) { AugustinerBrewery() }
+}
+```
+
+---
+
+# Create on start
+
+By default all declarations are evaluated lazily, to create decalration instance
+on graph creation time:
+
+- add `createOnStart = true` to module declaration:
+
+``` kotlin
+val appModule = module(`createOnStart = true`) {
+    single { AugustinerBrewery() as Brewery }
+}
+```
+
+---
+
+# Create on start
+
+To prevent creation of instance on Koin start:
+
+``` kotlin
+startKoin(listOf(/* modules */), `createOnStart = false`)
 ```
 
 ---
 
 # Properties
 
-Properties is a static values loaded on koin start:
-- from `koin.properties` file (in `src/main/resources`, `src/test/resources`, `assets/koin.properties`):
+Properties is a "static" values loaded on koin start:
+- from `koin.properties` file (in `src/main/resources`, `src/test/resources`, `assets/koin.properties`)
 
 ``` kotlin
 startKoin(listOf(..), `useKoinPropertiesFile = true`)
 ```
 
---
 
-- via parameter in `startKoin()` method:
+---
 
-``` kotlin
-startKoin(listOf(..), `extraProperties = mapOf("one" to 12345)`)
-```
+# Properties
 
---
-
-- from environment properties:
+Properties is a "static" values loaded on koin start:
+- from `koin.properties` file (in `src/main/resources`, `src/test/resources`, `assets/koin.properties`)
+- from environment properties
 
 ``` kotlin
 startKoin(listOf(..), `useEnvironmentProperties = true`)
@@ -197,150 +362,317 @@ startKoin(listOf(..), `useEnvironmentProperties = true`)
 
 ---
 
+
 # Properties
 
-Property can be accessed using:
-- `getProperty(<Key>)`
-- `by property(<Key>)`
+Properties is a "static" values loaded on koin start:
+- from `koin.properties` file (in `src/main/resources`, `src/test/resources`, `assets/koin.properties`)
+- from environment properties
+- via parameter in `startKoin()` method
 
---
-
-Property can be added by calling `setProperty("ZZZ", 123213)` in `KoinComponent` or on `context` object.
+``` kotlin
+startKoin(listOf(..), `extraProperties = mapOf("one" to 12345)`)
+```
 
 ---
 
-# Parameters
+# Properties
+
+Property can be accessed using:
+- `getProperty("property_key")`
+- `by property("property_key")`
+
+--
+
+Property can be added by calling on `KoinComponent` or on `context` object:
+
+``` kotlin
+    setProperty("property_key", 42)
+```
+
+---
+
+# Properties usage example
+
+``` kotlin
+val parametersModule = module {
+*   single { BrewDogBrewery(getProperty("beer_amount")) }
+    factory { BeerLover(get()) }
+}
+
+class ParametersApplication : Application, KoinComponent {
+    override fun run() {
+        startKoin(
+            listOf(parametersModule),
+*           extraProperties = mapOf("beer_amount" to 750)
+        )
+        val beerLover = get<BeerLover>()
+        beerLover.drink()
+    ...
+```
+
+---
+
+# Injection parameters
 
 Allows to dynamically provide class paramter when requesting definition:
 
 --
 
 ``` kotlin
-class CraftBrewery(
-    private val beerAmount: Int
-) : Brewery {
-    override fun brewBeer(): Beer = Beer(beerAmount)
+val paramsModule = module {
+    factory { `(beerAmount: Int)` ->
+        BrewDogBrewery(beerAmount) as Brewery
+    }
 }
+```
 
-val BEER_AMOUNT_PARAM = "beer_amount"
+---
 
-val moduleWithParams = applicationContext {
-    factory { `params -> CraftBrewery(params[BEER_AMOUNT]) as Brewery` }
+# Injection parameters
+
+Allows to dynamically provide class paramter when requesting definition:
+
+``` kotlin
+class ParamsApplication : Application, KoinComponent {
+    override fun run() {
+        startKoin(listOf(paramsModule))
+        val brewery = `get<Brewery> { parametersOf(750) }`
+        println(brewery.brewBeer())
+        closeKoin()
+    }
 }
+```
+
+---
+
+# Injection parameters
+
+Allows to dynamically provide class paramter when requesting definition:
+
+
+``` kotlin
+class ParamsApplication : Application, KoinComponent {
+    private val brewery: Brewery `by inject { parametersOf(750) }`
+    override fun run() {
+        startKoin(listOf(paramsModule))
+        println(brewery.brewBeer())
+        closeKoin()
+    }
+}
+```
+
+---
+
+# Modules
+
+Main goal of modules:
+- **to scope** definitions in namespace
+- an ability **to drop** created definitions instances inside namespace
+
+---
+
+# Modules
+
+Module namespace is "similar" to java packages:
+
+--
+
+``` kotlin
+// Namespace = "."
+val rootNamespace = module { }
+
+```
+
+--
+
+```kotlin
+// Namespace = ".sample"
+val sampleNamespace = module("sample") {  }
 ```
 
 --
 
 ``` kotlin
-class ApplicationWithParams : KoinComponent {
-    fun run() {
-*       val brewery: Brewery = get { mapOf(BOTTLE_AMOUNT to 350) }
+// Namespace = ".Brewery"
+val classNamespace = module(Brewery::class.moduleName) {  }
+```
+
+---
+
+# Inner modules
+
+Module can also contain _inner_ modules, that will have _parent_ namespace:
+
+``` kotlin
+val innerModule = module {
+    single { AugustinerBrewery() as Brewery }
+*   module("month") {
+*       module("october") {
+            factory { OktoberfestBeerLover(get()) }
+        }
     }
 }
 ```
 
 ---
 
-# Context
+# Inner modules
 
-A `context` is a logical subset of bean definitions inside a module:
-
+Module can also contain _inner_ modules, that will have _parent_ namespace:
 
 ``` kotlin
-val moduleWithContext = applicationContext {
-    bean { AugustinerBrewery() as Brewery }
+val innerModule = module {
+    single { AugustinerBrewery() as Brewery }
+*   module("month.october") {
+        factory { OktoberfestBeerLover(get()) }
+    }
+}
+```
 
-*   context("Oktoberfest") {
+---
+
+# Definitions visibility in modules
+
+Module namespace isolation:
+
+``` kotlin
+val moduleVisibility = `module` {
+    single("amount") { 750 }
+*   module("craftbiermuc") {
+        single { BrewDogBrewery(get("amount")) as Brewery }
         factory { BeerLover(get()) }
     }
-}
-```
-
----
-
-# Context
-
-Main goal of context is an ability to drop it's definitions instances:
-
-
-``` kotlin
-class ApplicationWithContext : KoinComponent {
-    fun run() {
-        val beerLover = get<BeerLover>()
-*       releaseContext("Oktoberfest")
-        val newBeerLover = get<BeerLover>()
-
-        beerLover `should not be` newBeerLover
+*   module("oktoberfest") {
+        single { AugustinerBrewery() as Brewery }
+*       module("tourist") {
+            factory { BeerLover(get()) }
+        }
     }
 }
 ```
 
----
+???
 
-# Context
-
-Context isolation:
-
-``` kotlin
-val moduleWithNestedContexts = applicationContext {
-    context("A") {
-        context("B") {}
-    }
-
-    context("C") {}
-}
-```
-
-* definitions from **B** can see definitions from **A** and **Application context**
-* definitions from **A** can see definitions from **Application context**
-* definitions from **C** can see definitions from **Application context**
+* definitions from **tourist** can get definitions from **oktoberfest** and **root**
+* definitions from **oktoberfest** can get definitions from **root**
+* definitions from **craftbiermuc** can get definitions from **root**
 
 All other visibilities are **blocked**.
 
 ---
 
+# Definitions visibility in modules
+
+**Child namespaces can see their parents, but not the inverse!**
+
+---
+
+# Using modules
+
+``` kotlin
+val sampleNamespace = module("sample") {
+    single { AugustinerBrewery() as Brewery }
+}
+val classNamespace = module(Brewery::class.moduleName) {
+    single { BrewDogBrewery() as Brewery }
+}
+
+class Application : KoinComponent {
+    fun run() {
+        startKoin(listOf(sampleNamespace, classNamespace))
+        val brewery = get<Brewery>(`module = "sample"`)
+    }
+}
+```
+
+---
+
+# Releasing definitions
+
+Releasing defintions helps to manage instances lifecycle and save memory.
+
+--
+
+``` kotlin
+val sampleNamespace = module("sample") {..}
+
+class ReleaseInstancesApplication : Application, KoinComponent {
+    override fun run() {
+        val brewery = get<Brewery>()
+        release("sample")
+        val newBrewery = get<Brewery>()
+        assert(brewery !== newBrewery)
+    }
+}
+```
+
+---
+
+# Releasing definitions
+
+_On releasing instances in parent namespace, all child namespaces instances are also released!_
+
+---
+
 # Testing
 
-* Include test dependency:
+Include test dependency:
 
 ``` gradle
+ext.koin_version = "1.0.0-beta-3"
 testImplementation "org.koin:koin-test:$koin_version"
 ```
 
+---
+
+# Testing
+
+Test class shoud:
+- extend `KoinTest`
+
 --
 
-* Test class shoud extend `KoinTest`
-
---
-
-* Add:
+- have following:
 
 ``` kotlin
-@Before
-fun before(){
+@Before fun before() {
     startKoin(listOf(myModule))
 }
 
-@After
-fun after(){
+@After fun after() {
     closeKoin()
 }
 
 ```
 
-Use `by inject()` in test fields to get required depedencies.
+---
+
+# Testing
+
+Koin test adds following:
+* Use `by inject()` or `get()` in test fields to get required depedencies.
+* Use `declareMock<Type>()` in test to replace actual instance with Mockito _mock_.
+* Use `declare { factory {..}}` to provide stubs implementations.
 
 ---
 
-# Koin dry run
+# Testing: check
 
-Allows to verify injections graph using Unit test:
+`check(listOf(..))` - walks through provided modules list definitions graph
+and checks that each definition is bound.
+
+---
+
+# Testing: dry run
+
+`dryRun()` - allows to verify app injections graph
 
 ``` kotlin
 class MyTest : KoinTest {
     @Test
     fun dryRun() {
-        startKoin(/* list of app modules */)
+        startKoin(listOf(/* list of app modules */))`
 *       dryRun()
     }
 }
@@ -350,27 +682,13 @@ class MyTest : KoinTest {
 
 # Logging
 
-Koin defines following interface for loggers:
+Koin defines following interface fqййqor loggers:
 
 ``` kotlin
 interface Logger {
-    fun log(msg : String)
     fun debug(msg : String)
+    fun log(msg : String)
     fun err(msg : String)
-}
-```
-
---
-
-Set your custom logger:
-
-``` kotlin
-Koin.logger = object : Logger {
-    override fun debug(msg: String) { .. }
-
-    override fun err(msg: String) { .. }
-
-    override fun log(msg: String) { .. }
 }
 ```
 
@@ -378,54 +696,121 @@ Koin.logger = object : Logger {
 
 # Logging
 
-Default is `PrintLogger` implementation - it uses `println()`.
+Use custom logger:
+
+``` kotlin
+val koinLogger = object : Logger {
+    override fun debug(msg: String) { .. }
+    override fun log(msg: String) { .. }
+    override fun err(msg: String) { .. }
+}
+startKoin(listOf(..), `logger = koinLogger`)
+
+```
+---
+
+# Logging
+
+Already existing `Logger` implementations:
+- `PrintLogger` - uses `println()` (default, in `koin-core`)
+- `EmptyLogger` - log nothing (in `koin-core`)
+- `SLF4JLogger` - uses `SLF4J` library (in `koin-logger-slf4j`)
+- `AndroidLogger` - uses `android.util.Log` (in `koin-android`)
+
+---
+
+# Logging
+
+Example:
+
+
+``` irc-log
+(KOIN)::[inf] [Logger] display debug = false
+(KOIN)::[inf] [context] create
+(KOIN)::[inf] [module] declare Single [class='koin.Brewery']
+(KOIN)::[inf] [module] declare Factory [class='koin.BeerLover']
+(KOIN)::[inf] [modules] loaded 2 definitions
+(KOIN)::[inf] [properties] load koin.properties
+(KOIN)::[inf] +-- 'koin.BeerLover'
+(KOIN)::[inf] | +-- 'koin.Brewery'
+(KOIN)::[inf] | \-- (*)
+(KOIN)::[inf] \-- (*)
+(KOIN)::[inf] [Close] Closing Koin context
+```
 
 ---
 
 # Koin packages
 
+Core:
+
 ``` gradle
-koin_version = '0.9.3' // Latest stable version
-
 // Koin for Kotlin
-implementation "org.koin:koin-core:$koin_version"
-
-// Koin for Android
-implementation "org.koin:koin-android:$koin_version"
-
-// Koin for Android Architecture Components
-implementation "org.koin:koin-android-architecture:$koin_version"
-
-// Koin for Spark Kotlin
-implementation "org.koin:koin-spark:$koin_version"
-
-// Koin for Ktor Kotlin
-implementation "org.koin:koin-ktor:$koin_version"
-
-// Koin for JUnit tests
-testImplementation "org.koin:koin-test:$koin_version"
+compile "org.koin:koin-core:$koin_version"
+// Koin for Unit tests
+testCompile "org.koin:koin-test:$koin_version"
+// Koin for Java developers
+compile "org.koin:koin-java:$koin_version"
+// Advanced features
+compile "org.koin:koin-reflect:$koin_version"
 ```
 
 ???
-`koin-android` - adds android logger and extentions to `Application` class
-and `ComponentCallbacks` interface
 
-`koin-android-architecture` - add extentions helper functions to provide
-`ViewModel` using Koin and special version of `ViewModelProvider.Factory`
-
-`koin-ktor` - adds helper methods to create koin graph on ktor `Application`
-
-`koin-spark` - add helper methods to spark
-
-`koin-test` - exposes internals, add junit assertions, dry run
+`reflect` adds `build()` method that can instantiate object via reflection
+`java` add java friendly functions to use Koin
 
 ---
 
-# Pros/cons versus Dagger 2
+# Koin packages
 
-**Pros**:
+Android:
 
---
+``` gradle
+// Koin for Android
+compile "org.koin:koin-android:$koin_version"
+// Koin Android Scope feature
+compile "org.koin:koin-android-scope:$koin_version"
+// Koin Android ViewModel feature
+compile "org.koin:koin-android-viewmodel:$koin_version"
+
+// AndroidX (based on koin-android)
+// Koin AndroidX Scope feature
+compile "org.koin:koin-androidx-scope:$koin_version"
+// Koin AndroidX ViewModel feature
+compile "org.koin:koin-androidx-viewmodel:$koin_version"
+```
+
+???
+
+`scope` - adds useful methods to scope to certain module namespace injections
+and release it's definitions
+
+---
+
+# Koin packages
+
+Spark:
+
+``` gradle
+// Koin for Spark Kotlin
+compile "org.koin:koin-spark:$koin_version"
+```
+
+---
+
+# Koin packages
+
+Ktor:
+
+``` gradle
+// Koin for Ktor Kotlin
+compile "org.koin:koin-ktor:$koin_version"
+```
+
+---
+
+# Pros versus Dagger 2
 
 - Easier to understand
 
@@ -435,25 +820,33 @@ and `ComponentCallbacks` interface
 
 --
 
-- Doesn't require annotation processing
+- Doesn't require annotation processing (my favourite)
 
 --
 
 - Logging sometimes is useful
 
----
+--
 
-# Pros/cons versus Dagger 2
-
-**Cons**:
+- Easier to use in gradle modules/libraries
 
 --
+
+- Less boilerplate
+
+--
+
+- Feels more native in Kotlin
+
+---
+
+# Cons versus Dagger 2
 
 - Creates graph of dependencies in runtime
 
 --
 
-- Graph verification only via dry run
+- Graph verification only via dry run (not on compile time)
 
 --
 
@@ -461,22 +854,30 @@ and `ComponentCallbacks` interface
 
 ---
 
-# Next Koin 1.0.0 release
+class: center, middle
 
-- instead of `applicationContext` and `context` just `module`
-- `bean` renamed to `single`
-- added `createOnStart` flag
-- added `override` flag to be possible override definition from another module
-- improved parameters injection
-- adds java interop
-- optional reflection based injection
-- android lifecycle support for contexts
-- Spark and Ktor are using `koin-logger-slf4j` as default
+# Thank you!
 
-More details: https://medium.com/koin-developers/opening-the-koin-1-0-0-beta-version-99cb8be1c308
+## Questions?
 
 ---
 
-class: center, middle
+# Links
 
-# Thank you
+Presentation:
+https://tapchicoma.github.io/presentations/intro-to-koin/
+
+Playground:
+https://github.com/Tapchicoma/presentations/tree/master/intro-to-koin/playground
+
+.left-column[.center[
+![presentation-link](presentation-qrcode.jpeg)
+
+Presentation
+]]
+
+.right-column[.center[
+![playground-link](playground-qrcode.jpeg)
+
+Playground
+]]

@@ -13,10 +13,22 @@
         font-family: 'Muli';
         font-weight: bold;
       }
+      a, a:visited {
+          color: blue;
+      }
+      .footnote {
+          font-size: 0.7em;
+          position: absolute;
+          bottom: 1.5em;
+          left: 2em;
+      }
       .remark-slide-content h1 { font-size: 2em; }
       .remark-slide-content h2 { font-size: 1.5em; }
       .remark-slide-content h3 { font-size: 1.2em; }
-      .remark-slide-content { font-size: 30px; }
+      .remark-slide-content {
+          font-size: 30px;
+          padding: 0.3em 4em 0.3em 4em;
+      }
       code {
           background: #e7e7e7;
           font-size: 24px;
@@ -36,6 +48,14 @@
           padding-left: 1px;
           padding-right: 1px;
       }
+      .left-column {
+          width: 50%;
+          float: left;
+      }
+      .right-column {
+          width: 50%;
+          float: right;
+      }
     </style>
   </head>
   <body>
@@ -49,7 +69,8 @@
           ratio: '16:9',
           highlightStyle: 'solarized-light',
           highlightLines: true,
-          highlightSpans:true
+          highlightSpans:true,
+          navigation: { click:true }
       });
     </script>
   </body>

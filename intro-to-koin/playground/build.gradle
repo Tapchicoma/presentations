@@ -1,0 +1,30 @@
+plugins {
+    id 'org.jetbrains.kotlin.jvm' version '1.2.51'
+    id 'application'
+}
+
+ext.koin_version = "1.0.0-beta-3"
+ext.mockito_version = "2.8.9"
+
+group 'com.github.tapchicoma'
+version '1.0-SNAPSHOT'
+
+repositories {
+    jcenter()
+}
+
+dependencies {
+    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8"
+    implementation "org.koin:koin-core:$koin_version"
+    implementation "org.koin:koin-test:$koin_version"
+    implementation "org.mockito:mockito-core:$mockito_version"
+    compile "org.mockito:mockito-inline:$mockito_version"
+}
+
+compileKotlin {
+    kotlinOptions.jvmTarget = "1.8"
+}
+
+compileTestKotlin {
+    kotlinOptions.jvmTarget = "1.8"
+}
