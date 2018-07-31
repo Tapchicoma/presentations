@@ -11,6 +11,12 @@ name: agenda
 
 ---
 
+class: center, middle
+
+# What is Dependency injection
+
+---
+
 # What is Dependency injection
 
 Base class structure:
@@ -121,6 +127,12 @@ They can be provided via:
 
 ---
 
+class: center, middle
+
+# Simple Koin setup
+
+---
+
 # Simple Koin setup
 
 Add Koin dependency:
@@ -217,6 +229,11 @@ fun main(vararg args: String) {
 *   closeKoin()
 }
 ```
+
+---
+
+class: center, middle
+# Dependency resolution
 
 ---
 
@@ -335,6 +352,11 @@ To prevent creation of instance on Koin start:
 ``` kotlin
 startKoin(listOf(/* modules */), `createOnStart = false`)
 ```
+
+---
+
+class: center, middle
+# Main Koin concepts
 
 ---
 
@@ -615,6 +637,12 @@ _On releasing instances in parent namespace, all child namespaces instances are 
 
 ---
 
+class: center,middle
+
+# Testing
+
+---
+
 # Testing
 
 Include test dependency:
@@ -686,6 +714,12 @@ class MyTest : KoinTest {
 
 ---
 
+class: center,middle
+
+# Logging
+
+---
+
 # Logging
 
 Koin defines following interface for loggers:
@@ -743,6 +777,11 @@ Example:
 (KOIN)::[inf] \-- (*)
 (KOIN)::[inf] [Close] Closing Koin context
 ```
+---
+
+class:center,middle
+
+# Koin packages
 
 ---
 
@@ -813,6 +852,11 @@ Ktor:
 // Koin for Ktor Kotlin
 compile "org.koin:koin-ktor:$koin_version"
 ```
+
+---
+
+class:middle,center
+# Pros/Cons versus Dagger 2
 
 ---
 
