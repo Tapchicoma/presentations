@@ -600,7 +600,7 @@ val sampleNamespace = module("sample") {..}
 class ReleaseInstancesApplication : Application, KoinComponent {
     override fun run() {
         val brewery = get<Brewery>()
-        release("sample")
+*       release("sample")
         val newBrewery = get<Brewery>()
         assert(brewery !== newBrewery)
     }
@@ -633,7 +633,7 @@ Test class shoud:
 
 --
 
-- have following:
+- add following:
 
 ``` kotlin
 @Before fun before() {
@@ -650,9 +650,15 @@ Test class shoud:
 
 # Testing
 
-Koin test adds following:
+`KoinTest` adds following functions:
 * Use `by inject()` or `get()` in test fields to get required depedencies.
+
+--
+
 * Use `declareMock<Type>()` in test to replace actual instance with Mockito _mock_.
+
+--
+
 * Use `declare { factory {..}}` to provide stubs implementations.
 
 ---
@@ -682,7 +688,7 @@ class MyTest : KoinTest {
 
 # Logging
 
-Koin defines following interface fqййqor loggers:
+Koin defines following interface for loggers:
 
 ``` kotlin
 interface Logger {
