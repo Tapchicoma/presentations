@@ -1,37 +1,47 @@
---
+class: center, middle
 
-Make you tests better with spek framework.
+# A test framework for Kotlin
 
 https://spekframework.org/
 
---
+---
 
-What is spek?
+# What is spek?
 
---
+---
 
-Small history of spek creation
+# History of spek creation
 
---
+Possibly not needed...
 
-How to add it?
+---
+
+# How to add it?
 
 Minimal supported Gradle version - `4.7`
 
-Add:
+---
+
+# How to add it?
+
+Add dependencies to `build.gradle`:
 
 ```gradle
+ext.spek = <spek_version>
+
 dependencies {
-    testImplementation("org.spekframework.spek2:spek-dsl-jvm:<spek_version>")
-    testRuntimeOnly("org.spekframework.spek2:spek-runner-junit5:<spek_version>")
+  testImplementation("org.spekframework.spek2:spek-dsl-jvm:$spek")
+  testRuntimeOnly("org.spekframework.spek2:spek-runner-junit5:$spek")
 }
 ```
 
 ---
 
-Define:
+# How to add it?
 
-``` gradle
+Use `spek2` engine for tests:
+
+```gradle
 test {
     useJUnitPlatform {
         includeEngines 'spek2'
@@ -41,22 +51,24 @@ test {
 
 ---
 
-Install plugin: https://plugins.jetbrains.com/plugin/10915-spek-framework
+# How to add it?
 
---
+Optionally install plugin:
 
-Core concepts
+https://plugins.jetbrains.com/plugin/10915-spek-framework
 
---
+---
 
-Test Styles
+# Core concepts
 
---
+---
 
-Why it is better then Junit 5?
+# Test Styles
 
---
+---
 
-Questions?
+# Why it is better then Junit 5?
 
---
+---
+
+# Questions?
