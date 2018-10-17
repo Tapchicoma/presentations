@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Spek</title>
+    <meta charset="utf-8">
+    <style>
+      @import url(https://fonts.googleapis.com/css?family=Muli);
+      @import url(https://fonts.googleapis.com/css?family=Muli:400,700,400italic);
+      @import url(https://fonts.googleapis.com/css?family=Source+Code+Pro:400,700,400italic);
+
+      body { font-family: 'Muli'; }
+      h1, h2, h3 {
+        font-family: 'Muli';
+        font-weight: bold;
+      }
+      a, a:visited {
+          color: blue;
+      }
+      .footnote {
+          font-size: 0.7em;
+          position: absolute;
+          bottom: 1.5em;
+          left: 2em;
+      }
+      .remark-slide-content h1 { font-size: 2em; }
+      .remark-slide-content h2 { font-size: 1.5em; }
+      .remark-slide-content h3 { font-size: 1.2em; }
+      .remark-slide-content {
+          font-size: 30px;
+          padding: 0.3em 4em 0.3em 4em;
+      }
+      .remark-notes {
+          font-size: 2.5em;
+      }
+      code {
+          background: #e7e7e7;
+          font-size: 24px;
+      }
+      .remark-code, .remark-inline-code { font-family: 'Source Code Pro'; font-size: 24px; }
+      .remark-code-line-highlighted {
+          background-color: rgba(255,204,142,0.5);
+          padding-top: 0px;
+          padding-bottom: 0px;
+          padding-left: 1px;
+          padding-right: 1px;
+      }
+      .remark-code-span-highlighted {
+          background-color: rgba(255,204,142,0.5);
+          padding-top: 0px;
+          padding-bottom: 0px;
+          padding-left: 1px;
+          padding-right: 1px;
+      }
+      .left-column {
+          width: 50%;
+          float: left;
+      }
+      .right-column {
+          width: 50%;
+          float: right;
+      }
+    </style>
+  </head>
+  <body>
+    <textarea id="source">
+    </textarea>
+    <script src="https://remarkjs.com/downloads/remark-latest.min.js">
+    </script>
+    <script>
+      var slideshow = remark.create({
+          sourceUrl: 'spek.md',
+          ratio: '16:9',
+          highlightStyle: 'solarized-light',
+          highlightLines: true,
+          highlightSpans:true,
+          navigation: { click:true }
+      });
+    </script>
+  </body>
+</html>
