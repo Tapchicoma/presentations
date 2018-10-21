@@ -16,13 +16,13 @@ Possibly not needed...
 
 ---
 
-# How to add it?
+# Spek setup
 
 Minimal supported Gradle version - `4.7`
 
 ---
 
-# How to add it?
+# Spek setup
 
 Add dependencies to `build.gradle`:
 
@@ -37,7 +37,7 @@ dependencies {
 
 ---
 
-# How to add it?
+# Spek setup
 
 Use `spek2` engine for tests:
 
@@ -51,7 +51,7 @@ test {
 
 ---
 
-# How to add it?
+# Spek setup
 
 Optionally install plugin:
 
@@ -172,6 +172,10 @@ Caching modes(`mode` param):
 ---
 
 # Test Styles
+
+---
+
+# Tips and tricks
 
 ---
 
