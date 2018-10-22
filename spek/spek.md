@@ -171,7 +171,42 @@ Caching modes(`mode` param):
 
 ---
 
-# Test Styles
+# Test Styles - Specification
+
+It was inspired by Ruby `RSpec` and javascript `Jasmine` test frameworks:
+
+``` kotlin
+class CalculatorTestSpec : Spek({
+    `describe`("A calculator") {
+        val calculator by memoized { Calculator() }
+        `it`("returns set value") { <test_assertion> }
+
+        `describe`("with value 2") {
+            `before` { calculator.setValue(2) }
+            `it`("on adding 4 returns 6") { <test_assertion> }
+        }
+}})
+```
+
+---
+
+# Test Styles - Specification
+
+Core to style bindings:
+
+.pure-table.pure-table-bordered.pure-table-striped.smaller-font[
+
+| Core      | Specification |
+| :----------------: | :-------------------: |
+| group | describe |
+| group | context |
+| test | it |
+| beforeGroup | before |
+| afterGroup | after |
+| beforeEach | beforeEachTest |
+| afterEach | afterEachTest |
+
+]
 
 ---
 
