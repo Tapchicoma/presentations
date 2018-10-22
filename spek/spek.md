@@ -210,6 +210,46 @@ Core to style bindings:
 
 ---
 
+# Test Styles - Gherkin
+
+It was inspired by Cucumber test framework Gherkin style:
+
+``` kotlin
+class CalculatorTestGherkin : Spek({
+    `Feature`("A calculator") {
+        val calculator by memoized { Calculator() }
+        `Scenario`("on set value") {
+            `Then`("it returns value") { <test_assertion> }
+        }
+
+        `Scenario`("with value 2") {
+            `Given`("with value") { calculator.setValue(2) }
+            `Then`("on adding 4 returns 6") { <test_assertion> }
+    }
+})
+```
+
+---
+
+# Test Styles - Gherkin
+
+Core to style bindings:
+
+.pure-table.pure-table-bordered.pure-table-striped.smaller-font[
+
+| Core      | Gherkin |
+| :----------------: | :-------------------: |
+| group | Feature |
+| group | Scenario |
+| test | Given |
+| test | When |
+| test | Then |
+| test | And |
+
+]
+
+---
+
 # Tips and tricks
 
 ---
