@@ -285,7 +285,7 @@ class CalculatorTest : Spek({
     `group`("A calculator") {
         `test`("returns set value") { .. }
         `group`("with value 2") {
-            `test`("on adding 4 returns { .. }
+            `test`("on adding 4 returns 6") { .. }
         }
     }
 })
@@ -373,16 +373,24 @@ group("on temp file") {
 
 ### Fixtures
 
-`by memoized {}` - special cache delegate. By default, recreates instance for each test:
+`by memoized {}` - special cache delegate, that replaces following code:
 
 ``` kotlin
 lateinit var calculator: Calculator
 beforeEachTest { calculator = Calculator() }
 ```
 
+---
+
+# Core concepts
+
+### Fixtures
+
+`by memoized {}` - by default, recreates instance for each test.
+
 --
 
-Caching modes(`mode` param):
+Caching modes(`mode` optional param):
 - `TEST` - creates new instance per test
 - `GROUP` - creates new instance per group (nested one as well)
 - `SCOPE` - creates new instance withing the group
