@@ -6,13 +6,192 @@ https://spekframework.org/
 
 ---
 
-# What is spek?
+# What is Spek?
+
+**Spek** is a _behaviour driven framework_(BDD) written in Kotlin,
+that supports Kotlin multiplatform.red[*].
+
+.footnote[.red[*] WIP: common and jvm for now]
 
 ---
 
-# History of spek creation
+# Quick intro to BDD
 
-Possibly not needed...
+Story started with unit test:
+
+``` kotlin
+class ReferenceNumberTest {
+  @Test
+  fun testValidate() {
+    assertFalse(ReferenceNumber.validate("1234567890123"))
+    assertFalse(ReferenceNumber.validate("1234567"))
+    assertTrue(ReferenceNumber.validate("12345678"))
+  }
+}
+```
+
+???
+ _Typical_ unit-test - just tests a method and that is all.
+
+---
+
+# Quick intro to BDD
+
+Then, someone applied best-practices and rewrote test:
+- split into smaller tests, that tests only one thing at a time
+- give more meaningful test method names
+
+---
+
+# Quick intro to BDD
+
+``` kotlin
+class ReferenceNumberTest {
+  @Test fun testTooLong() {
+    val len13 = "1234567891111"
+    assertEquals(len13.length, 13)
+    assertEquals(ReferenceNumber.validate(len13), false)
+  }
+
+  ...
+}
+```
+
+---
+
+# Quick intro to BDD
+
+``` kotlin
+class ReferenceNumberTest {
+  ...
+
+  @Test fun testTooShort() {
+    val len7 = "1234567"
+    assertEquals(len7.length, 7)
+    assertEquals(ReferenceNumber.validate(len7), false)
+  }
+
+  ...
+}
+```
+
+---
+
+# Quick intro to BDD
+
+``` kotlin
+class ReferenceNumberTest {
+  ...
+
+  @Test fun testOk() {
+    val len8 = "12345678"
+    assertEquals(len8.length, 8)
+    assertEquals(ReferenceNumber.validate(len8), true)
+
+    val len12 = "123456789111"
+    assertEquals(len12.length, 12)
+    assertEquals(ReferenceNumber.validate(len12), true)
+  }
+}
+```
+
+???
+
+Now it reads easier, you can guess some conditions that method has.
+
+---
+
+# Quick intro to BDD
+
+But still test doesn't provide all information about `ReferenceNumber.validate()` contract.
+
+And developers may still look into implementation.
+
+--
+
+Again someone tried to improve tests...
+
+---
+
+# Quick intro to BDD
+
+``` kotlin
+class ReferenceNumberTest {
+  @Test fun \`Null is not valid ReferenceNumber`() {
+    assertFalse(ReferenceNumber.validate(null))
+  }
+
+  @Test fun \`ReferenceNumber should be shorter than 13`() {
+    assertFalse(ReferenceNumber.validate("1234567890123"))
+  }
+
+  @Test fun \`ReferenceNumber should be longer than 7`() {
+    assertFalse(ReferenceNumber.validate("1234567"))
+  }
+  ...
+}
+```
+
+---
+
+# Quick intro to BDD
+
+``` kotlin
+class ReferenceNumberTest {
+  ...
+
+  @Test fun \`ReferenceNumber should contain only numbers`() {
+    assertFalse(ReferenceNumber.validate("1234567ab"))
+    assertFalse(ReferenceNumber.validate("abcdefghi"))
+    assertFalse(ReferenceNumber.validate("---------"))
+    assertFalse(ReferenceNumber.validate("         "))
+  }
+  ...
+}
+```
+
+---
+
+# Quick intro to BDD
+
+``` kotlin
+class ReferenceNumberTest {
+  ...
+
+  @Test fun \`Valid ReferenceNumber examples`() {
+    assertTrue(ReferenceNumber.validate("12345678"))
+    assertTrue(ReferenceNumber.validate("123456789"))
+    assertTrue(ReferenceNumber.validate("1234567890"))
+    assertTrue(ReferenceNumber.validate("12345678901"))
+    assertTrue(ReferenceNumber.validate("123456789012"))
+  }
+}
+```
+
+---
+
+# Quick intro to BDD
+
+**BDD** flow:
+- create your object specifications in common language:
+
+``` kotlin
+spec "ReferenceNumber"
+
+it "should not be null"
+it "should be shorter than 13"
+it "should be longer than 7"
+it "should contain only numbers"
+it "valid reference number examples"
+```
+
+- write test according them
+- write actual object implementation
+
+???
+
+Other languages BDD frameworks:
+Java (JDave, JBehave), Ruby (RSpec, RBehave, Cucumber), Groovy (Easyb), Scala (Scala-test), PHP (Behat), CPP (CppSpec), .Net (SpecFlow, Shouldly), Python (Lettuce, Cucumber).
 
 ---
 
@@ -252,9 +431,8 @@ Core to style bindings:
 
 # Tips and tricks
 
----
-
-# Why it is better then Junit 5?
+// one assertion per test
+// data driven tests
 
 ---
 
