@@ -209,8 +209,26 @@ Add dependencies to `build.gradle`:
 ext.spek = <spek_version>
 
 dependencies {
-  testImplementation("org.spekframework.spek2:spek-dsl-jvm:$spek")
-  testRuntimeOnly("org.spekframework.spek2:spek-runner-junit5:$spek")
+  testImplementation(
+    "org.spekframework.spek2:spek-dsl-jvm:$spek"
+  )
+  testRuntimeOnly(
+    "org.spekframework.spek2:spek-runner-junit5:$spek"
+  )
+}
+```
+
+---
+
+# Spek setup
+
+For common sources, should be:
+
+``` gradle
+dependencies {
+  testImplementation(
+    "org.spekframework.spek2:spek-dsl-common:$spek"
+  )
 }
 ```
 
@@ -235,6 +253,27 @@ test {
 Optionally install plugin:
 
 https://plugins.jetbrains.com/plugin/10915-spek-framework
+
+---
+
+# Spek setup
+
+Additional setup for android projects:
+
+``` gradle
+apply plugin: "de.mannodermaus.android-junit5"
+
+android {
+    ...
+    testOptions {
+        junitPlatform {
+            filters {
+                engines { include 'spek2' }
+            }
+        }
+    }
+}
+```
 
 ---
 
