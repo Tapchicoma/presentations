@@ -420,25 +420,18 @@ class CalculatorTestSpec : Spek({
 
 Core to style bindings:
 
-.pure-table.pure-table-bordered.pure-table-striped.smaller-font[
-
-| Core      | Specification |
-| :----------------: | :-------------------: |
-| group | describe |
-| group | context |
-| test | it |
-| beforeGroup | before |
-| afterGroup | after |
-| beforeEach | beforeEachTest |
-| afterEach | afterEachTest |
-
-]
+- Specification `describe` and `context` to core `group`
+- Specification `it` to core `test`
+- Specification `before` to core `beforeGroup`
+- Specification `after` to core `afterGroup`
+- Specification `beforeEachTest` to core `beforeEach`
+- Specification `afterEachTest` to core `afterEach`
 
 ---
 
 # Test Styles - Gherkin
 
-It was inspired by Cucumber test framework Gherkin style:
+It was inspired by `Cucumber` test framework `Gherkin` style:
 
 ``` kotlin
 class CalculatorTestGherkin : Spek({
@@ -461,18 +454,8 @@ class CalculatorTestGherkin : Spek({
 
 Core to style bindings:
 
-.pure-table.pure-table-bordered.pure-table-striped.smaller-font[
-
-| Core      | Gherkin |
-| :----------------: | :-------------------: |
-| group | Feature |
-| group | Scenario |
-| test | Given |
-| test | When |
-| test | Then |
-| test | And |
-
-]
+- Gherkin `Feature` and `Scenario` to core `group`
+- Gherkin `Given`, `When`, `Then`, `And` to core `test`
 
 ---
 
