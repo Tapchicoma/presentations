@@ -4,6 +4,8 @@ class: center, middle
 
 https://spekframework.org/
 
+.footnote[By _Yahor Berdnikau_: Android developer **@Freeletics**]
+
 ---
 
 # What is Spek?
@@ -511,10 +513,36 @@ Create data driven tests:
 
 # Tips and tricks
 
-Watch KotlinConf 2017 talk "Testing Kotlin at Scale: Spek" by Artem Zinnatullin:
+Watch KotlinConf 2017 talk ["Testing Kotlin at Scale: Spek"](https://www.youtube.com/watch?v=R425cc6XrvA)  by Artem Zinnatullin:
 
-https://www.youtube.com/watch?v=R425cc6XrvA
+.center[<iframe width="560" height="315" src="https://www.youtube.com/embed/R425cc6XrvA" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>]
 
 ---
 
-# Questions?
+class: center, middle
+
+# Thank you!
+
+## Questions?
+
+---
+
+# Links
+
+Presentation:
+https://tapchicoma.github.io/presentations/spek/
+
+Playground:
+https://github.com/Tapchicoma/presentations/tree/master/spek/playground
+
+.left-column[.center[
+![presentation-link](presentation-qrcode.jpeg)
+
+Presentation
+]]
+
+.right-column[.center[
+![playground-link](playground-qrcode.jpeg)
+
+Playground
+]]
