@@ -15,7 +15,7 @@ class CalculatorTestGherkin : Spek({
                 result = calculator.setValue(value)
             }
             Then("it returns value") {
-                result `should be equal to` 2
+                result `should be equal to` value
             }
         }
 

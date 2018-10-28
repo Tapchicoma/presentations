@@ -12,12 +12,14 @@ class Calculator {
         return this.value
     }
 
+    fun currentValue(): Int = value
+
     fun add(addValue: Int): Int {
         value += addValue
         return value
     }
 
-    fun substract(subValue: Int): Int {
+    fun subtract(subValue: Int): Int {
         value -= subValue
         return value
     }

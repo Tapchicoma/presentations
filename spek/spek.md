@@ -461,8 +461,59 @@ Core to style bindings:
 
 # Tips and tricks
 
-// one assertion per test
-// data driven tests
+Prefer using **one** assertion per test.
+
+---
+
+# Tips and tricks
+
+Use nested groups that test specific test object state:
+
+``` kotlin
+describe("A calculator") {
+  val calculator by memoized { Calculator() }
+  context("With initial value 2") {
+    beforeEach { calculator.setValue(2) }
+    it("has 2 as current value ") { .. }
+    describe("adding") {
+      it(..) { .. }
+    }
+    describe("subtracting") {
+      it(..) { .. }
+    }
+  }
+}
+```
+
+---
+
+# Tips and tricks
+
+Create data driven tests:
+
+``` kotlin
+  context("to calculator with value 4") {
+    beforeEach { calculator.setValue(4) }
+    val testData = mapOf(
+      4 to 8,
+      122 to 126,
+      730 to 734
+    )
+    testData.forEach { addValue, expectedResult ->
+      it("adding $addValue returns $expectedResult") {
+        calculator.add(addValue).shouldEqual(expectedResult)
+      }
+    }
+  }
+```
+
+---
+
+# Tips and tricks
+
+Watch KotlinConf 2017 talk "Testing Kotlin at Scale: Spek" by Artem Zinnatullin:
+
+https://www.youtube.com/watch?v=R425cc6XrvA
 
 ---
 
