@@ -7,4 +7,4 @@
 - [Spek](https://tapchicoma.github.io/presentations/spek/) - introduction to [spek framework](https://spekframework.org/)
 
 ## Gradle
--[Simple-Gradle-Modules](https://tapchicoma.github.io/presentations/gradle-modules) - make your life easier in Gradle multimodule project
+- [Simple-Gradle-Modules](https://tapchicoma.github.io/presentations/gradle-modules) - make your life easier in Gradle multimodule project
